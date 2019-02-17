@@ -5,3 +5,4 @@ authors = ["Craig Harley <craigharley2@googlemail.com>"]
 edition = "2018"
 
 [dependencies]
+mysql = "15.1.0"
