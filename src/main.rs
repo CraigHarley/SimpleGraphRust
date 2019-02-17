@@ -7,8 +7,8 @@ fn main() {
     let step3 = add_edge(step2, 5, 2);
     let step4 = add_edge(step3, 2, 6);
 
-    for (&i, secondLevel) in step4.iter() {
-        for (&j, &value) in secondLevel.iter() {
+    for (&i, second_level) in step4.iter() {
+        for (&j, &value) in second_level.iter() {
             println!("Calling {}, {}: {}", i, j, value);
         }
     }
@@ -19,23 +19,7 @@ fn add_edge(
     i: u32,
     j: u32,
 ) -> HashMap<u32, HashMap<u32, bool>> {
-    match matrix.get(&i) {
-        Some(mut neighbors) => neighbors.insert(j, true),
-        _ => {
-            let mut neighbors = HashMap::new();
-            neighbors.insert(j, true);
-            matrix.insert(i, neighbors);
-        }
-    }
-
-    match matrix.get(&j) {
-        Some(mut neighbors) => neighbors.insert(i, true),
-        _ => {
-            let mut neighbors = HashMap::new();
-            neighbors.insert(i, true);
-            matrix.insert(j, neighbors);
-        }
-    }
-
+    matrix.entry(i).or_insert_with(HashMap::new).insert(j, true);
+    matrix.entry(j).or_insert_with(HashMap::new).insert(i, true);
     return matrix;
 }
