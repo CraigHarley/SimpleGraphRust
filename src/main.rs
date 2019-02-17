@@ -30,7 +30,6 @@ fn main() {
     let end = PreciseTime::now();
     println!("{} seconds to start up.", start.to(end));
 
-
 //    for (&i, second_level) in matrix.iter() {
 //        for (&j, &value) in second_level.iter() {
 //            println!("Calling {}, {}: {}", i, j, value);
@@ -88,7 +87,11 @@ fn add_edge(
     return matrix;
 }
 
-fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u32) -> Result {
+fn bfs(
+    matrix: &HashMap<u32, HashMap<u32, u32>>,
+    start_value: u32,
+    goal_value: u32,
+) -> Result {
     if start_value == goal_value || !matrix.contains_key(&start_value) || !matrix.contains_key(&goal_value) {
         return Result {
             success: start_value == goal_value,
@@ -117,6 +120,10 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
             Some(current_node) => {
 //              println!("checking: {} == {}", current_node, goal_node);
                 if current_node.value == goal_value {
+
+
+//                  todo unwind path here
+
                     return Result {
                         success: true,
                         path: vec![],
@@ -148,7 +155,11 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
     }
 }
 
-fn get_unvisited_neighbors(matrix: &HashMap<u32, HashMap<u32, u32>>, visited_nodes: &Vec<u32>, i: u32) -> Vec<u32> {
+fn get_unvisited_neighbors(
+    matrix: &HashMap<u32, HashMap<u32, u32>>,
+    visited_nodes: &Vec<u32>,
+    i: u32,
+) -> Vec<u32> {
     if matrix.contains_key(&i) {
         return matrix[&i]
             .keys()
