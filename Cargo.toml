@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 mysql = "15.1.0"
+time = "*"

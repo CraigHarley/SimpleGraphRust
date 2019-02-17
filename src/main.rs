@@ -1,8 +1,10 @@
 extern crate mysql;
+extern crate time;
 
 use std::collections::HashMap;
 use mysql::QueryResult;
 use std::collections::vec_deque::VecDeque;
+use time::PreciseTime;
 
 struct PlayerLink {
     id: u32,
@@ -11,7 +13,11 @@ struct PlayerLink {
 }
 
 fn main() {
+    let start = PreciseTime::now();
     let matrix = create_graph_from_mysql();
+    let end = PreciseTime::now();
+    println!("{} seconds to start up.", start.to(end));
+
 
 //    for (&i, second_level) in matrix.iter() {
 //        for (&j, &value) in second_level.iter() {
@@ -19,9 +25,20 @@ fn main() {
 //        }
 //    }
 
+    let start = PreciseTime::now();
     println!("Searching {}", bfs(&matrix, 2266, 3002));
-//    println!("Searching {}", bfs(&matrix, 824, 8));
-//    println!("Searching {}", bfs(&matrix, 2440, 93243));
+    let end = PreciseTime::now();
+    println!("{} seconds to run first.", start.to(end));
+
+    let start = PreciseTime::now();
+    println!("Searching {}", bfs(&matrix, 17, 3002));
+    let end = PreciseTime::now();
+    println!("{} seconds to run second.", start.to(end));
+
+    let start = PreciseTime::now();
+    println!("Searching {}", bfs(&matrix, 17, 15301));
+    let end = PreciseTime::now();
+    println!("{} seconds to run third.", start.to(end));
 }
 
 fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, bool>> {

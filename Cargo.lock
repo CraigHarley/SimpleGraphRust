@@ -485,6 +485,7 @@ name = "rust_six_degrees"
 version = "0.1.0"
 dependencies = [
  "mysql 15.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.42 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
