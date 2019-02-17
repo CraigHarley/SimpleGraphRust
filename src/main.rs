@@ -12,10 +12,10 @@ struct PlayerLink {
     to_player_id: u32,
 }
 
+#[derive(Clone)]
 struct GraphNode {
     value: u32,
-    is_visited: bool,
-    parent: Option<Box<GraphNode>>,
+    parent: Box<Option<GraphNode>>,
 }
 
 struct Result {
@@ -106,8 +106,7 @@ fn bfs(
         queue.push_front(
             GraphNode {
                 value,
-                is_visited: true,
-                parent: None,
+                parent: Box::from(Option::None),
             }
         );
     };
@@ -120,27 +119,38 @@ fn bfs(
             Some(current_node) => {
 //              println!("checking: {} == {}", current_node, goal_node);
                 if current_node.value == goal_value {
+                    let mut path: Vec<u32> = vec![];
+                    path.push(current_node.value);
 
-
-//                  todo unwind path here
+                    loop {
+                        match current_node.parent {
+                            Some(next_parent_node) => {
+                                let de_reffed = *next_parent_node;
+                                path.push(de_reffed.value);
+                            }
+                            _ => {
+                                break;
+                            }
+                        }
+                    }
 
                     return Result {
                         success: true,
-                        path: vec![],
+                        path,
                         visited_count,
                     };
                 }
-
                 if !visited_nodes.contains(&current_node.value) {
                     for value in get_unvisited_neighbors(&matrix, &visited_nodes, current_node.value) {
+
                         queue.push_front(
                             GraphNode {
                                 value,
-                                is_visited: true,
-                                parent: None,
+                                parent: Box::from(Some(current_node)),
                             }
                         );
                     };
+
                     visited_nodes.push(current_node.value);
                 }
             }
