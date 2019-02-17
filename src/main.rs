@@ -12,6 +12,18 @@ struct PlayerLink {
     to_player_id: u32,
 }
 
+struct GraphNode {
+    value: u32,
+    is_visited: bool,
+    parent: Option<Box<GraphNode>>,
+}
+
+struct Result {
+    success: bool,
+    path: Vec<u32>,
+    visited_count: u32,
+}
+
 fn main() {
     let start = PreciseTime::now();
     let matrix = create_graph_from_mysql();
@@ -25,23 +37,20 @@ fn main() {
 //        }
 //    }
 
-    let start = PreciseTime::now();
-    println!("Searching {}", bfs(&matrix, 2266, 3002));
-    let end = PreciseTime::now();
-    println!("{} seconds to run first.", start.to(end));
+    let from_ids = [2266, 17, 17, 9682, 3405];
+    let to_ids = [3002, 3002, 15031, 14658, 2773];
 
-    let start = PreciseTime::now();
-    println!("Searching {}", bfs(&matrix, 17, 3002));
-    let end = PreciseTime::now();
-    println!("{} seconds to run second.", start.to(end));
-
-    let start = PreciseTime::now();
-    println!("Searching {}", bfs(&matrix, 17, 15301));
-    let end = PreciseTime::now();
-    println!("{} seconds to run third.", start.to(end));
+    for (i, _y) in from_ids.iter().enumerate() {
+        let start: PreciseTime = PreciseTime::now();
+        let result: Result = bfs(&matrix, from_ids[i], to_ids[i]);
+        println!("Visited: {} Path: {} Success: {}", result.visited_count, "N/A", result.success);
+        let end: PreciseTime = PreciseTime::now();
+        println!("{} seconds to run...", start.to(end));
+        println!();
+    }
 }
 
-fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, bool>> {
+fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, u32>> {
     let pool = mysql::Pool::new("mysql://root@localhost:3306/mysql").unwrap();
     let mut matrix = HashMap::new();
 
@@ -61,58 +70,85 @@ fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, bool>> {
             }).unwrap();
 
     for link in player_links {
-        matrix = add_edge(matrix, link.from_player_id, link.to_player_id);
+        matrix = add_edge(matrix, link.from_player_id, link.to_player_id, link.id);
     }
 
     return matrix;
 }
 
 fn add_edge(
-    mut matrix: HashMap<u32, HashMap<u32, bool>>,
-    i: u32,
-    j: u32,
-) -> HashMap<u32, HashMap<u32, bool>> {
-    matrix.entry(i).or_insert_with(HashMap::new).insert(j, true);
-    matrix.entry(j).or_insert_with(HashMap::new).insert(i, true);
+    mut matrix: HashMap<u32, HashMap<u32, u32>>,
+    from_id: u32,
+    to_id: u32,
+    link_id: u32,
+) -> HashMap<u32, HashMap<u32, u32>> {
+    matrix.entry(from_id).or_insert_with(HashMap::new).insert(to_id, link_id);
+    matrix.entry(to_id).or_insert_with(HashMap::new).insert(from_id, link_id);
+
     return matrix;
 }
 
-fn bfs(matrix: &HashMap<u32, HashMap<u32, bool>>, start_node: u32, goal_node: u32) -> bool {
-    if start_node == goal_node || !matrix.contains_key(&start_node) || !matrix.contains_key(&goal_node) {
-        println!("got here 3, {} {} {}", start_node == goal_node, !matrix.contains_key(&start_node), !matrix.contains_key(&goal_node));
-
-        return false;
+fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u32) -> Result {
+    if start_value == goal_value || !matrix.contains_key(&start_value) || !matrix.contains_key(&goal_value) {
+        return Result {
+            success: start_value == goal_value,
+            path: vec![],
+            visited_count: 0,
+        };
     }
 
-    let mut queue: VecDeque<u32> = VecDeque::new();
+    let mut queue: VecDeque<GraphNode> = VecDeque::new();
     let mut visited_nodes: Vec<u32> = vec![];
-    for x in get_unvisited_neighbors(&matrix, &visited_nodes, start_node) {
-        queue.push_front(x);
+    for value in get_unvisited_neighbors(&matrix, &visited_nodes, start_value) {
+        queue.push_front(
+            GraphNode {
+                value,
+                is_visited: true,
+                parent: None,
+            }
+        );
     };
 
+    let mut visited_count: u32 = 0;
     loop {
+        visited_count = visited_count + 1;
+
         match queue.pop_back() {
             Some(current_node) => {
-//                println!("checking: {} == {}", current_node, goal_node);
-                if current_node == goal_node {
-                    return true;
+//              println!("checking: {} == {}", current_node, goal_node);
+                if current_node.value == goal_value {
+                    return Result {
+                        success: true,
+                        path: vec![],
+                        visited_count,
+                    };
                 }
 
-                if !visited_nodes.contains(&current_node) {
-                    for x in get_unvisited_neighbors(&matrix, &visited_nodes, current_node) {
-                        queue.push_front(x);
+                if !visited_nodes.contains(&current_node.value) {
+                    for value in get_unvisited_neighbors(&matrix, &visited_nodes, current_node.value) {
+                        queue.push_front(
+                            GraphNode {
+                                value,
+                                is_visited: true,
+                                parent: None,
+                            }
+                        );
                     };
-                    visited_nodes.push(current_node);
+                    visited_nodes.push(current_node.value);
                 }
             }
             _ => {
-                return false;
+                return Result {
+                    success: false,
+                    path: vec![],
+                    visited_count,
+                };
             }
         }
     }
 }
 
-fn get_unvisited_neighbors(matrix: &HashMap<u32, HashMap<u32, bool>>, visited_nodes: &Vec<u32>, i: u32) -> Vec<u32> {
+fn get_unvisited_neighbors(matrix: &HashMap<u32, HashMap<u32, u32>>, visited_nodes: &Vec<u32>, i: u32) -> Vec<u32> {
     if matrix.contains_key(&i) {
         return matrix[&i]
             .keys()
