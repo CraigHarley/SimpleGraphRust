@@ -15,7 +15,7 @@ struct PlayerLink {
 #[derive(Clone)]
 struct GraphNode {
     value: u32,
-    parent: Box<Option<GraphNode>>,
+    parent: Option<Box<&GraphNode>>,
 }
 
 struct Result {
@@ -106,7 +106,7 @@ fn bfs(
         queue.push_front(
             GraphNode {
                 value,
-                parent: Box::from(Option::None),
+                parent: Option::None,
             }
         );
     };
@@ -124,7 +124,7 @@ fn bfs(
 
                     loop {
                         match current_node.parent {
-                            Some(next_parent_node) => {
+                            Some(&next_parent_node) => {
                                 let de_reffed = *next_parent_node;
                                 path.push(de_reffed.value);
                             }
@@ -146,7 +146,7 @@ fn bfs(
                         queue.push_front(
                             GraphNode {
                                 value,
-                                parent: Box::from(Some(current_node)),
+                                parent: Some(Box::from(&current_node)),
                             }
                         );
                     };
