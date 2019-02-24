@@ -5,6 +5,8 @@ use std::collections::HashMap;
 use mysql::QueryResult;
 use std::collections::vec_deque::VecDeque;
 use time::PreciseTime;
+use std::rc::Rc;
+use std::fmt;
 
 struct PlayerLink {
     id: u32,
@@ -12,15 +14,18 @@ struct PlayerLink {
     to_player_id: u32,
 }
 
-#[derive(Clone)]
 struct GraphNode {
     value: u32,
-    parent: Option<Box<&GraphNode>>,
+    parent: Option<Rc<GraphNode>>,
 }
-
+impl fmt::Debug for GraphNode {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
 struct Result {
     success: bool,
-    path: Vec<u32>,
+    path: VecDeque<Rc<GraphNode>>,
     visited_count: u32,
 }
 
@@ -32,7 +37,7 @@ fn main() {
 
 //    for (&i, second_level) in matrix.iter() {
 //        for (&j, &value) in second_level.iter() {
-//            println!("Calling {}, {}: {}", i, j, value);
+//            println!("Calling {}, {}: {}", i, j , value);
 //        }
 //    }
 
@@ -42,7 +47,7 @@ fn main() {
     for (i, _y) in from_ids.iter().enumerate() {
         let start: PreciseTime = PreciseTime::now();
         let result: Result = bfs(&matrix, from_ids[i], to_ids[i]);
-        println!("Visited: {} Path: {} Success: {}", result.visited_count, "N/A", result.success);
+        println!("Visited: {} Path: {:?} Success: {}", result.visited_count, result.path, result.success);
         let end: PreciseTime = PreciseTime::now();
         println!("{} seconds to run...", start.to(end));
         println!();
@@ -95,19 +100,21 @@ fn bfs(
     if start_value == goal_value || !matrix.contains_key(&start_value) || !matrix.contains_key(&goal_value) {
         return Result {
             success: start_value == goal_value,
-            path: vec![],
+            path: VecDeque::new(),
             visited_count: 0,
         };
     }
 
-    let mut queue: VecDeque<GraphNode> = VecDeque::new();
+    let mut queue: VecDeque<Rc<GraphNode>> = VecDeque::new();
     let mut visited_nodes: Vec<u32> = vec![];
     for value in get_unvisited_neighbors(&matrix, &visited_nodes, start_value) {
         queue.push_front(
-            GraphNode {
-                value,
-                parent: Option::None,
-            }
+            Rc::new(
+                GraphNode {
+                    value,
+                    parent: Option::None,
+                }
+            )
         );
     };
 
@@ -119,14 +126,15 @@ fn bfs(
             Some(current_node) => {
 //              println!("checking: {} == {}", current_node, goal_node);
                 if current_node.value == goal_value {
-                    let mut path: Vec<u32> = vec![];
-                    path.push(current_node.value);
+                    let mut path: VecDeque<Rc<GraphNode>> = VecDeque::new();
+                    path.push_front(current_node.clone());
 
+                    let mut parent_node = Option::Some(current_node.clone());
                     loop {
-                        match current_node.parent {
-                            Some(&next_parent_node) => {
-                                let de_reffed = *next_parent_node;
-                                path.push(de_reffed.value);
+                        match parent_node {
+                            Some(next_parent_node) => {
+                                path.push_front(next_parent_node.clone());
+                                parent_node = next_parent_node.parent.clone();
                             }
                             _ => {
                                 break;
@@ -142,12 +150,13 @@ fn bfs(
                 }
                 if !visited_nodes.contains(&current_node.value) {
                     for value in get_unvisited_neighbors(&matrix, &visited_nodes, current_node.value) {
-
                         queue.push_front(
-                            GraphNode {
-                                value,
-                                parent: Some(Box::from(&current_node)),
-                            }
+                            Rc::new(
+                                GraphNode {
+                                    value,
+                                    parent: Option::Some(current_node.clone()),
+                                }
+                            )
                         );
                     };
 
@@ -157,7 +166,7 @@ fn bfs(
             _ => {
                 return Result {
                     success: false,
-                    path: vec![],
+                    path: VecDeque::new(),
                     visited_count,
                 };
             }
