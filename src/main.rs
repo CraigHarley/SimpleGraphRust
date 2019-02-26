@@ -1,12 +1,21 @@
+#![feature(proc_macro_hygiene, decl_macro)]
+
 extern crate mysql;
 extern crate time;
 
-use std::collections::HashMap;
+#[macro_use]
+extern crate rocket;
+extern crate serde;
+extern crate rocket_contrib;
+
 use mysql::QueryResult;
 use std::collections::vec_deque::VecDeque;
-use time::PreciseTime;
-use std::rc::Rc;
+use std::collections::HashMap;
 use std::fmt;
+use std::rc::Rc;
+use rocket::State;
+use rocket_contrib::json::{Json};
+use serde::{Serialize};
 
 struct PlayerLink {
     id: u32,
@@ -18,40 +27,30 @@ struct GraphNode {
     value: u32,
     parent: Option<Rc<GraphNode>>,
 }
+
 impl fmt::Debug for GraphNode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.value)
     }
 }
+
+#[derive(Serialize)]
 struct Result {
     success: bool,
-    path: VecDeque<Rc<GraphNode>>,
+    //    path: VecDeque<Rc<GraphNode>>,
     visited_count: u32,
 }
 
+struct Graph {
+    matrix: HashMap<u32, HashMap<u32, u32>>
+}
+
 fn main() {
-    let start = PreciseTime::now();
-    let matrix = create_graph_from_mysql();
-    let end = PreciseTime::now();
-    println!("{} seconds to start up.", start.to(end));
-
-//    for (&i, second_level) in matrix.iter() {
-//        for (&j, &value) in second_level.iter() {
-//            println!("Calling {}, {}: {}", i, j , value);
-//        }
-//    }
-
-    let from_ids = [2266, 17, 17, 9682, 3405];
-    let to_ids = [3002, 3002, 15031, 14658, 2773];
-
-    for (i, _y) in from_ids.iter().enumerate() {
-        let start: PreciseTime = PreciseTime::now();
-        let result: Result = bfs(&matrix, from_ids[i], to_ids[i]);
-        println!("Visited: {} Path: {:?} Success: {}", result.visited_count, result.path, result.success);
-        let end: PreciseTime = PreciseTime::now();
-        println!("{} seconds to run...", start.to(end));
-        println!();
-    }
+    rocket::ignite()
+        .manage(Graph { matrix: create_graph_from_mysql() })
+        .mount("/sixdegrees", routes![sixdegrees])
+//        .register(catchers![not_found])
+        .launch();
 }
 
 fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, u32>> {
@@ -86,21 +85,26 @@ fn add_edge(
     to_id: u32,
     link_id: u32,
 ) -> HashMap<u32, HashMap<u32, u32>> {
-    matrix.entry(from_id).or_insert_with(HashMap::new).insert(to_id, link_id);
-    matrix.entry(to_id).or_insert_with(HashMap::new).insert(from_id, link_id);
+    matrix
+        .entry(from_id)
+        .or_insert_with(HashMap::new)
+        .insert(to_id, link_id);
+    matrix
+        .entry(to_id)
+        .or_insert_with(HashMap::new)
+        .insert(from_id, link_id);
 
     return matrix;
 }
 
-fn bfs(
-    matrix: &HashMap<u32, HashMap<u32, u32>>,
-    start_value: u32,
-    goal_value: u32,
-) -> Result {
-    if start_value == goal_value || !matrix.contains_key(&start_value) || !matrix.contains_key(&goal_value) {
+fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u32) -> Result {
+    if start_value == goal_value
+        || !matrix.contains_key(&start_value)
+        || !matrix.contains_key(&goal_value)
+    {
         return Result {
             success: start_value == goal_value,
-            path: VecDeque::new(),
+//            path: VecDeque::new(),
             visited_count: 0,
         };
     }
@@ -108,15 +112,11 @@ fn bfs(
     let mut queue: VecDeque<Rc<GraphNode>> = VecDeque::new();
     let mut visited_nodes: Vec<u32> = vec![];
     for value in get_unvisited_neighbors(&matrix, &visited_nodes, start_value) {
-        queue.push_front(
-            Rc::new(
-                GraphNode {
-                    value,
-                    parent: Option::None,
-                }
-            )
-        );
-    };
+        queue.push_front(Rc::new(GraphNode {
+            value,
+            parent: Option::None,
+        }));
+    }
 
     let mut visited_count: u32 = 0;
     loop {
@@ -124,41 +124,39 @@ fn bfs(
 
         match queue.pop_back() {
             Some(current_node) => {
-//              println!("checking: {} == {}", current_node, goal_node);
+                //              println!("checking: {} == {}", current_node, goal_node);
                 if current_node.value == goal_value {
-                    let mut path: VecDeque<Rc<GraphNode>> = VecDeque::new();
-                    path.push_front(current_node.clone());
-
-                    let mut parent_node = Option::Some(current_node.clone());
-                    loop {
-                        match parent_node {
-                            Some(next_parent_node) => {
-                                path.push_front(next_parent_node.clone());
-                                parent_node = next_parent_node.parent.clone();
-                            }
-                            _ => {
-                                break;
-                            }
-                        }
-                    }
+//                    let mut path: VecDeque<Rc<GraphNode>> = VecDeque::new();
+//                    path.push_front(current_node.clone());
+//
+//                    let mut parent_node = Option::Some(current_node.clone());
+//                    loop {
+//                        match parent_node {
+//                            Some(next_parent_node) => {
+//                                path.push_front(next_parent_node.clone());
+//                                parent_node = next_parent_node.parent.clone();
+//                            }
+//                            _ => {
+//                                break;
+//                            }
+//                        }
+//                    }
 
                     return Result {
                         success: true,
-                        path,
+//                        path,
                         visited_count,
                     };
                 }
                 if !visited_nodes.contains(&current_node.value) {
-                    for value in get_unvisited_neighbors(&matrix, &visited_nodes, current_node.value) {
-                        queue.push_front(
-                            Rc::new(
-                                GraphNode {
-                                    value,
-                                    parent: Option::Some(current_node.clone()),
-                                }
-                            )
-                        );
-                    };
+                    for value in
+                        get_unvisited_neighbors(&matrix, &visited_nodes, current_node.value)
+                        {
+                            queue.push_front(Rc::new(GraphNode {
+                                value,
+                                parent: Option::Some(current_node.clone()),
+                            }));
+                        }
 
                     visited_nodes.push(current_node.value);
                 }
@@ -166,7 +164,7 @@ fn bfs(
             _ => {
                 return Result {
                     success: false,
-                    path: VecDeque::new(),
+//                    path: VecDeque::new(),
                     visited_count,
                 };
             }
@@ -188,4 +186,9 @@ fn get_unvisited_neighbors(
     }
 
     return vec![];
+}
+
+#[get("/<first>/<second>")]
+fn sixdegrees(first: u32, second: u32, graph: State<Graph>) -> Json<Result> {
+    Json(bfs(&graph.matrix, first, second))
 }

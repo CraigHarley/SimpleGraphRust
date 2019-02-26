@@ -7,3 +7,7 @@ edition = "2018"
 [dependencies]
 mysql = "15.1.0"
 time = "*"
+rocket = "*"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rocket_contrib = "*"
