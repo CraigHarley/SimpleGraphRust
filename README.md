@@ -1,1 +1,1 @@
-# SimpleGraphRust
+# SixDegreesRust
