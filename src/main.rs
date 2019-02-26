@@ -2,20 +2,19 @@
 
 extern crate mysql;
 extern crate time;
-
 #[macro_use]
 extern crate rocket;
-extern crate serde;
 extern crate rocket_contrib;
+extern crate serde;
 
 use mysql::QueryResult;
+use rocket::State;
+use rocket_contrib::json::Json;
+use serde::Serialize;
 use std::collections::vec_deque::VecDeque;
 use std::collections::HashMap;
 use std::fmt;
 use std::rc::Rc;
-use rocket::State;
-use rocket_contrib::json::{Json};
-use serde::{Serialize};
 
 struct PlayerLink {
     id: u32,
@@ -42,14 +41,15 @@ struct Result {
 }
 
 struct Graph {
-    matrix: HashMap<u32, HashMap<u32, u32>>
+    matrix: HashMap<u32, HashMap<u32, u32>>,
 }
 
 fn main() {
     rocket::ignite()
-        .manage(Graph { matrix: create_graph_from_mysql() })
+        .manage(Graph {
+            matrix: create_graph_from_mysql(),
+        })
         .mount("/sixdegrees", routes![sixdegrees])
-//        .register(catchers![not_found])
         .launch();
 }
 
@@ -104,7 +104,7 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
     {
         return Result {
             success: start_value == goal_value,
-//            path: VecDeque::new(),
+            //            path: VecDeque::new(),
             visited_count: 0,
         };
     }
@@ -124,27 +124,26 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
 
         match queue.pop_back() {
             Some(current_node) => {
-                //              println!("checking: {} == {}", current_node, goal_node);
                 if current_node.value == goal_value {
-//                    let mut path: VecDeque<Rc<GraphNode>> = VecDeque::new();
-//                    path.push_front(current_node.clone());
-//
-//                    let mut parent_node = Option::Some(current_node.clone());
-//                    loop {
-//                        match parent_node {
-//                            Some(next_parent_node) => {
-//                                path.push_front(next_parent_node.clone());
-//                                parent_node = next_parent_node.parent.clone();
-//                            }
-//                            _ => {
-//                                break;
-//                            }
-//                        }
-//                    }
+                    //                    let mut path: VecDeque<Rc<GraphNode>> = VecDeque::new();
+                    //                    path.push_front(current_node.clone());
+                    //
+                    //                    let mut parent_node = Option::Some(current_node.clone());
+                    //                    loop {
+                    //                        match parent_node {
+                    //                            Some(next_parent_node) => {
+                    //                                path.push_front(next_parent_node.clone());
+                    //                                parent_node = next_parent_node.parent.clone();
+                    //                            }
+                    //                            _ => {
+                    //                                break;
+                    //                            }
+                    //                        }
+                    //                    }
 
                     return Result {
                         success: true,
-//                        path,
+                        //                        path,
                         visited_count,
                     };
                 }
@@ -164,7 +163,7 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
             _ => {
                 return Result {
                     success: false,
-//                    path: VecDeque::new(),
+                    //                    path: VecDeque::new(),
                     visited_count,
                 };
             }
