@@ -36,7 +36,7 @@ impl fmt::Debug for GraphNode {
 #[derive(Serialize)]
 struct Result {
     success: bool,
-    //    path: VecDeque<Rc<GraphNode>>,
+    path: Vec<Rc<GraphNode>>,
     visited_count: u32,
 }
 
@@ -104,7 +104,7 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
     {
         return Result {
             success: start_value == goal_value,
-            //            path: VecDeque::new(),
+            path: vec![],
             visited_count: 0,
         };
     }
@@ -125,25 +125,25 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
         match queue.pop_back() {
             Some(current_node) => {
                 if current_node.value == goal_value {
-                    //                    let mut path: VecDeque<Rc<GraphNode>> = VecDeque::new();
-                    //                    path.push_front(current_node.clone());
-                    //
-                    //                    let mut parent_node = Option::Some(current_node.clone());
-                    //                    loop {
-                    //                        match parent_node {
-                    //                            Some(next_parent_node) => {
-                    //                                path.push_front(next_parent_node.clone());
-                    //                                parent_node = next_parent_node.parent.clone();
-                    //                            }
-                    //                            _ => {
-                    //                                break;
-                    //                            }
-                    //                        }
-                    //                    }
+                    let mut path: Vec<Rc<GraphNode>> = vec![];
+                    path.push(current_node.clone());
+
+                    let mut parent_node = Option::Some(current_node.clone());
+                    loop {
+                        match parent_node {
+                            Some(next_parent_node) => {
+                                path.push(next_parent_node.clone());
+                                parent_node = next_parent_node.parent.clone();
+                            }
+                            _ => {
+                                break;
+                            }
+                        }
+                    }
 
                     return Result {
                         success: true,
-                        //                        path,
+                        path,
                         visited_count,
                     };
                 }
@@ -163,7 +163,7 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
             _ => {
                 return Result {
                     success: false,
-                    //                    path: VecDeque::new(),
+                    path: vec![],
                     visited_count,
                 };
             }
