@@ -22,6 +22,7 @@ struct PlayerLink {
     to_player_id: u32,
 }
 
+#[derive(Serialize)]
 struct GraphNode {
     value: u32,
     parent: Option<Rc<GraphNode>>,
@@ -36,7 +37,7 @@ impl fmt::Debug for GraphNode {
 #[derive(Serialize)]
 struct Result {
     success: bool,
-    path: Vec<Rc<GraphNode>>,
+    path: Vec<u32>,
     visited_count: u32,
 }
 
@@ -126,7 +127,6 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
             Some(current_node) => {
                 if current_node.value == goal_value {
                     let mut path: Vec<Rc<GraphNode>> = vec![];
-                    path.push(current_node.clone());
 
                     let mut parent_node = Option::Some(current_node.clone());
                     loop {
@@ -141,9 +141,22 @@ fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u
                         }
                     }
 
+                    path.push(
+                        Rc::new(
+                            GraphNode {
+                                value: start_value,
+                                parent: None,
+                            }
+                        )
+                    );
+
                     return Result {
                         success: true,
-                        path,
+                        path: path
+                            .iter()
+                            .map(|f| f.value)
+                            .rev()
+                            .collect(),
                         visited_count,
                     };
                 }
