@@ -59,7 +59,7 @@ fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, u32>> {
     let mut matrix = HashMap::new();
 
     let player_links: Vec<PlayerLink> =
-        pool.prep_exec("SELECT id, fromPlayerId as from_player_id, toPlayerId as to_player_id FROM sixdegrees.player_links", ())
+        pool.prep_exec("SELECT id, fromPlayerId as from_player_id, toPlayerId as to_player_id FROM sixdegrees.playerlinks", ())
             .map(|result: QueryResult| {
                 result
                     .map(|x| x.unwrap())
@@ -74,7 +74,12 @@ fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, u32>> {
             }).unwrap();
 
     for link in player_links {
-        matrix = add_edge(matrix, link.from_player_id, link.to_player_id, link.id);
+        matrix = add_edge(
+            matrix,
+            link.from_player_id,
+            link.to_player_id,
+            link.id
+        );
     }
 
     return matrix;
