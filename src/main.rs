@@ -3,9 +3,9 @@ extern crate mysql;
 extern crate time;
 #[macro_use]
 extern crate rocket;
+extern crate dotenv;
 extern crate rocket_contrib;
 extern crate serde;
-extern crate dotenv;
 
 use rocket::State;
 use rocket_contrib::json::Json;

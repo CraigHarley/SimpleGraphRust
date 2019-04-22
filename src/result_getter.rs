@@ -5,11 +5,17 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct FormattedResult {
+    success: bool,
     links: Vec<LinkDetails>,
+    visited_count: u32,
 }
 
 pub fn result_getter(search_result: SearchResult) -> FormattedResult {
-    let mut formatted_result = FormattedResult { links: vec![] };
+    let mut formatted_result = FormattedResult {
+        success: search_result.success,
+        links: vec![],
+        visited_count: search_result.visited_count,
+    };
 
     if search_result.success {
         let mut current = 0;
