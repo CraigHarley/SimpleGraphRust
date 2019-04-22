@@ -1,6 +1,6 @@
 import React from "react";
 
-import players from "../data/players";
+// import players from "../data/players";
 
 const styles = {
     selectWrapper: {
@@ -15,24 +15,24 @@ const styles = {
     }
 };
 
-const options = players
-    .sort((a, b) => {
-        if (a.name < b.name) {
-            return -1;
-        }
-        if (a.name > b.name) {
-            return 1;
-        }
-        return 0;
-    })
-    .map((player) =>
-        <option
-            key={player.id}
-            value={player.id}
-        >
-            {player.name} ({player.dob})
-        </option>
-    );
+// const options = players
+//     .sort((a, b) => {
+//         if (a.name < b.name) {
+//             return -1;
+//         }
+//         if (a.name > b.name) {
+//             return 1;
+//         }
+//         return 0;
+//     })
+//     .map((player) =>
+        {/*<option*/}
+            // key={player.id}
+            // value={player.id}
+        // >
+        //     {player.name} ({player.dob})
+        // </option>
+    // );
 
 export default (
     <div>
@@ -46,7 +46,7 @@ export default (
                 style={{width: '20rem'}}
             >
                 <option value="" disabled>Select first player</option>
-                {options}
+                {/*{options}*/}
             </select>
         </div>
 
@@ -60,7 +60,7 @@ export default (
                 style={{width: '20rem'}}
             >
                 <option value="" disabled>Select second player</option>
-                {options}
+                {/*{options}*/}
             </select>
         </div>
 

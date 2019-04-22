@@ -10,8 +10,8 @@ time = "*"
 rocket = "*"
 serde = { version = "1.0", features = ["derive", "rc"] }
 serde_json = "1.0"
+dotenv="*"
 [dependencies.rocket_contrib]
 version = "*"
 default-features = false
-features = ["handlebars_templates", "tera_templates"]
-dotenv="*"
+features = ["handlebars_templates", "json"]
