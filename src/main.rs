@@ -5,6 +5,7 @@ extern crate time;
 extern crate rocket;
 extern crate rocket_contrib;
 extern crate serde;
+extern crate dotenv;
 
 use rocket::State;
 use rocket_contrib::json::Json;
