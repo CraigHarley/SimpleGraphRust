@@ -15,8 +15,8 @@ mod result_getter;
 use crate::graph::bfs;
 use crate::graph::create_graph_from_mysql;
 use crate::graph::Graph;
-use crate::graph::SearchResult;
 use crate::result_getter::result_getter;
+use crate::result_getter::FormattedResult;
 
 fn main() {
     rocket::ignite()

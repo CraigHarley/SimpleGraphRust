@@ -4,7 +4,7 @@ use mysql::QueryResult;
 use serde::Serialize;
 
 #[derive(Serialize)]
-struct FormattedResult {
+pub struct FormattedResult {
     links: Vec<LinkDetails>,
 }
 
@@ -14,7 +14,7 @@ pub fn result_getter(search_result: SearchResult) -> FormattedResult {
     if search_result.success {
         let mut current = 0;
 
-        while current + 1 <= search_result.path.len() {
+        while (current + 1) < search_result.path.len() {
             formatted_result.links.push(get_link_details(
                 search_result.path[current],
                 search_result.path[current + 1],
@@ -27,22 +27,27 @@ pub fn result_getter(search_result: SearchResult) -> FormattedResult {
 }
 
 #[derive(Serialize)]
-struct LinkDetails {}
+struct LinkDetails {
+    team_name: String,
+    years: String,
+    from_player_name: String,
+    to_player_name: String,
+}
 
 fn get_link_details(first: u32, second: u32) -> LinkDetails {
-    get_pool()
+    let mut link_details: Vec<LinkDetails> = get_pool()
         .prep_exec(
-            "\
-        SELECT    t.name,
-                  pl.years,
-                  fromPlayer.name,
-                  toPlayer.name
-        FROM      playerlinks AS pl \
+            "
+        SELECT    t.name as team_name,
+                  pl.years as years,
+                  fromPlayer.name as from_player_name,
+                  toPlayer.name as to_player_name
+        FROM      playerlinks AS pl
         LEFT JOIN team t              ON t.id = pl.teamID
         LEFT JOIN player fromPlayer   ON fromPlayer.id = pl.fromPlayerID
         LEFT JOIN player toPlayer     ON toPlayer.id = pl.toPlayerID
-        WHERE     fromPlayerId = ? \
-        AND       toPlayerId   = ? \
+        WHERE     fromPlayerId = ? 
+        AND       toPlayerId   = ? 
         LIMIT     1
         ",
             (first, second),
@@ -51,15 +56,17 @@ fn get_link_details(first: u32, second: u32) -> LinkDetails {
             result
                 .map(|x| x.unwrap())
                 .map(|row| {
-                    let (id, from_player_id, to_player_id) = mysql::from_row(row);
-                    PlayerLink {
-                        id,
-                        from_player_id,
-                        to_player_id,
+                    let (team_name, years, from_player_name, to_player_name) = mysql::from_row(row);
+                    LinkDetails {
+                        team_name,
+                        years,
+                        from_player_name,
+                        to_player_name,
                     }
                 })
                 .collect()
         })
-        .unwrap()
-        .pop()
+        .unwrap();
+
+    link_details.pop().unwrap()
 }

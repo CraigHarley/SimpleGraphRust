@@ -1,5 +1,12 @@
 use mysql::Pool;
 
 pub fn get_pool() -> Pool {
-    mysql::Pool::new("mysql://root@localhost:3306/mysql").unwrap()
+    let mut builder = mysql::OptsBuilder::new();
+    builder.ip_or_hostname(Some("127.0.0.1"))
+        .db_name(Some("sixdegrees"))
+        .user(Some("root"))
+        .pass(Some(""));
+
+
+    mysql::Pool::new(builder).unwrap()
 }
