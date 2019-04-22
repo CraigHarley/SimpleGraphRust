@@ -10,11 +10,12 @@ use rocket::State;
 use rocket_contrib::json::Json;
 
 mod graph;
+mod result_getter;
 use crate::graph::Graph;
 use crate::graph::create_graph_from_mysql;
 use crate::graph::bfs;
 use crate::graph::SearchResult;
-
+use crate::result_getter::result_getter;
 
 fn main() {
     rocket::ignite()
@@ -26,6 +27,10 @@ fn main() {
 }
 
 #[get("/<first>/<second>")]
-fn sixdegrees(first: u32, second: u32, graph: State<Graph>) -> Json<SearchResult> {
-    Json(bfs(&graph.matrix, first, second))
+fn sixdegrees(first: u32, second: u32, graph: State<Graph>) -> Json<FormattedResult> {
+    Json(
+        result_getter(
+            bfs(&graph.matrix, first, second)
+        )
+    )
 }

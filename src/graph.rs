@@ -7,9 +7,9 @@ use std::fmt;
 
 #[derive(Serialize)]
 pub struct SearchResult {
-    success: bool,
-    path: Vec<u32>,
-    visited_count: u32,
+    pub success: bool,
+    pub path: Vec<u32>,
+    pub visited_count: u32,
 }
 
 struct PlayerLink {
