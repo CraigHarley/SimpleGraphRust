@@ -11,6 +11,7 @@ use rocket_contrib::json::Json;
 
 mod graph;
 mod result_getter;
+mod pool;
 use crate::graph::Graph;
 use crate::graph::create_graph_from_mysql;
 use crate::graph::bfs;

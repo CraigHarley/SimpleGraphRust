@@ -1,6 +1,7 @@
 use serde::Serialize;
-use crate::graph::SearchResult;
 use mysql::QueryResult;
+use crate::pool::get_pool;
+use crate::graph::SearchResult;
 
 #[derive(Serialize)]
 struct FormattedResult {
@@ -29,10 +30,7 @@ pub fn result_getter(search_result: SearchResult) -> FormattedResult {
 struct LinkDetails {}
 
 fn get_link_details(first: u32, second: u32) -> LinkDetails {
-    // todo get pool
-    let pool = mysql::Pool::new("mysql://root@localhost:3306/mysql").unwrap();
-
-    pool.prep_exec("\
+    get_pool().prep_exec("\
         SELECT    t.name,
                   pl.years,
                   fromPlayer.name,
@@ -42,7 +40,7 @@ fn get_link_details(first: u32, second: u32) -> LinkDetails {
         LEFT JOIN player fromPlayer   ON fromPlayer.id = pl.fromPlayerID
         LEFT JOIN player toPlayer     ON toPlayer.id = pl.toPlayerID
         WHERE     fromPlayerId = ? \
-        AND       toPlayerId = ? \
+        AND       toPlayerId   = ? \
         LIMIT     1
         ", (first, second))
         .map(|result: QueryResult| {

@@ -4,6 +4,7 @@ use std::rc::Rc;
 use mysql::QueryResult;
 use serde::Serialize;
 use std::fmt;
+use crate::pool::get_pool;
 
 #[derive(Serialize)]
 pub struct SearchResult {
@@ -35,12 +36,10 @@ impl fmt::Debug for GraphNode {
 }
 
 pub fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, u32>> {
-//  todo env
-    let pool = mysql::Pool::new("mysql://root@localhost:3306/mysql").unwrap();
     let mut matrix = HashMap::new();
 
     let player_links: Vec<PlayerLink> =
-        pool.prep_exec("SELECT id, fromPlayerId as from_player_id, toPlayerId as to_player_id FROM sixdegrees.playerlinks", ())
+        get_pool().prep_exec("SELECT id, fromPlayerId as from_player_id, toPlayerId as to_player_id FROM sixdegrees.playerlinks", ())
             .map(|result: QueryResult| {
                 result
                     .map(|x| x.unwrap())
