@@ -1,25 +1,25 @@
-use serde::Serialize;
-use mysql::QueryResult;
-use crate::pool::get_pool;
 use crate::graph::SearchResult;
+use crate::pool::get_pool;
+use mysql::QueryResult;
+use serde::Serialize;
 
 #[derive(Serialize)]
 struct FormattedResult {
-    links: Vec<LinkDetails>
+    links: Vec<LinkDetails>,
 }
 
 pub fn result_getter(search_result: SearchResult) -> FormattedResult {
-    let mut formatted_result = FormattedResult {
-        links: vec![]
-    };
+    let mut formatted_result = FormattedResult { links: vec![] };
 
     if search_result.success {
-        let current = 0;
+        let mut current = 0;
 
-        if current + 1 <= search_result.path.len() {
-            formatted_result.links.push(
-                get_link_details(search_result.path[current], search_result.path[current + 1])
-            );
+        while current + 1 <= search_result.path.len() {
+            formatted_result.links.push(get_link_details(
+                search_result.path[current],
+                search_result.path[current + 1],
+            ));
+            current = current + 1;
         }
     }
 
@@ -30,7 +30,9 @@ pub fn result_getter(search_result: SearchResult) -> FormattedResult {
 struct LinkDetails {}
 
 fn get_link_details(first: u32, second: u32) -> LinkDetails {
-    get_pool().prep_exec("\
+    get_pool()
+        .prep_exec(
+            "\
         SELECT    t.name,
                   pl.years,
                   fromPlayer.name,
@@ -42,7 +44,9 @@ fn get_link_details(first: u32, second: u32) -> LinkDetails {
         WHERE     fromPlayerId = ? \
         AND       toPlayerId   = ? \
         LIMIT     1
-        ", (first, second))
+        ",
+            (first, second),
+        )
         .map(|result: QueryResult| {
             result
                 .map(|x| x.unwrap())
@@ -53,7 +57,8 @@ fn get_link_details(first: u32, second: u32) -> LinkDetails {
                         from_player_id,
                         to_player_id,
                     }
-                }).collect()
+                })
+                .collect()
         })
         .unwrap()
         .pop()

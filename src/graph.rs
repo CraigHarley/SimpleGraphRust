@@ -1,10 +1,10 @@
-use std::collections::HashMap;
-use std::collections::vec_deque::VecDeque;
-use std::rc::Rc;
+use crate::pool::get_pool;
 use mysql::QueryResult;
 use serde::Serialize;
+use std::collections::vec_deque::VecDeque;
+use std::collections::HashMap;
 use std::fmt;
-use crate::pool::get_pool;
+use std::rc::Rc;
 
 #[derive(Serialize)]
 pub struct SearchResult {
@@ -54,12 +54,7 @@ pub fn create_graph_from_mysql() -> HashMap<u32, HashMap<u32, u32>> {
             }).unwrap();
 
     for link in player_links {
-        matrix = add_edge(
-            matrix,
-            link.from_player_id,
-            link.to_player_id,
-            link.id,
-        );
+        matrix = add_edge(matrix, link.from_player_id, link.to_player_id, link.id);
     }
 
     return matrix;
@@ -83,7 +78,11 @@ pub fn add_edge(
     return matrix;
 }
 
-pub fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_value: u32) -> SearchResult {
+pub fn bfs(
+    matrix: &HashMap<u32, HashMap<u32, u32>>,
+    start_value: u32,
+    goal_value: u32,
+) -> SearchResult {
     if start_value == goal_value
         || !matrix.contains_key(&start_value)
         || !matrix.contains_key(&goal_value)
@@ -126,34 +125,26 @@ pub fn bfs(matrix: &HashMap<u32, HashMap<u32, u32>>, start_value: u32, goal_valu
                         }
                     }
 
-                    path.push(
-                        Rc::new(
-                            GraphNode {
-                                value: start_value,
-                                parent: None,
-                            }
-                        )
-                    );
+                    path.push(Rc::new(GraphNode {
+                        value: start_value,
+                        parent: None,
+                    }));
 
                     return SearchResult {
                         success: true,
-                        path: path
-                            .iter()
-                            .map(|f| f.value)
-                            .rev()
-                            .collect(),
+                        path: path.iter().map(|f| f.value).rev().collect(),
                         visited_count,
                     };
                 }
                 if !visited_nodes.contains(&current_node.value) {
                     for value in
                         get_unvisited_neighbors(&matrix, &visited_nodes, current_node.value)
-                        {
-                            queue.push_front(Rc::new(GraphNode {
-                                value,
-                                parent: Option::Some(current_node.clone()),
-                            }));
-                        }
+                    {
+                        queue.push_front(Rc::new(GraphNode {
+                            value,
+                            parent: Option::Some(current_node.clone()),
+                        }));
+                    }
 
                     visited_nodes.push(current_node.value);
                 }
