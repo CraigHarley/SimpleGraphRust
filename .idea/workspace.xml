@@ -1,55 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9e2bb663-326e-4380-862b-66571b8a9e4b" name="Default Changelist" comment="Formatting">
-      <change afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.idea/SixDegreesNextJS.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/build-manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/react-loadable-manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/pages-manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/ssr-module-cache.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/_app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/_app.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/_document.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/_document.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/_error.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/_error.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/server/static/development/pages/index.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/chunks/0.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/chunks/0.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/development/dll/dll_4b84449dc4da211521b4.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/development/pages/_app.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/development/pages/_app.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/development/pages/_error.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/development/pages/_error.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/development/pages/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/development/pages/index.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/runtime/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/runtime/main.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/runtime/webpack.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/runtime/webpack.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/.next/static/webpack/ee0733206ce5a0344a5a.hot-update.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/actions/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/server.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/store.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/graph.rs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/graph.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pool.rs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/pool.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/result_getter.rs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/result_getter.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/tests.rs" afterDir="false" />
-    </list>
+    <list default="true" id="9e2bb663-326e-4380-862b-66571b8a9e4b" name="Default Changelist" comment="" />
     <ignored path=".env" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -105,13 +57,13 @@
           <entry key="env" value="79" />
           <entry key="rs" value="3208" />
           <entry key="toml" value="34" />
-          <entry key="txt" value="324" />
+          <entry key="txt" value="332" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key=".env file" value="79" />
-          <entry key="PLAIN_TEXT" value="324" />
+          <entry key="PLAIN_TEXT" value="332" />
           <entry key="Rust" value="3125" />
           <entry key="SQL" value="83" />
           <entry key="TOML" value="34" />
@@ -140,6 +92,11 @@
           <entry key="TOML" value="3" />
         </counts>
       </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts">
+        <counts>
+          <entry key="TypeScriptServerServiceImpl" value="1" />
+        </counts>
+      </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
@@ -147,8 +104,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/frontend/actions/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" column="1" lean-forward="true" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+            <state relative-caret-position="238">
+              <caret line="14" column="39" lean-forward="true" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -202,6 +159,7 @@
         <option value="$PROJECT_DIR$/src/main.rs" />
         <option value="$PROJECT_DIR$/src/pool.rs" />
         <option value="$PROJECT_DIR$/src/result_getter.rs" />
+        <option value="$PROJECT_DIR$/frontend/actions/index.js" />
       </list>
     </option>
   </component>
@@ -302,7 +260,7 @@
       <workItem from="1551731640071" duration="3849000" />
       <workItem from="1555107309102" duration="8597000" />
       <workItem from="1555938575526" duration="8674000" />
-      <workItem from="1555957026577" duration="4645000" />
+      <workItem from="1555957026577" duration="4918000" />
     </task>
     <task id="LOCAL-00001" summary="missing lifetime parameter">
       <created>1550938253484</created>
@@ -402,18 +360,27 @@
       <option name="project" value="LOCAL" />
       <updated>1555970961526</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="progress">
+      <created>1555972439512</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1555972439512</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50248000" />
+    <option name="totallyTimeSpent" value="50521000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18783784" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="TypeScript" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.56911767" />
@@ -505,12 +472,12 @@
     <MESSAGE value="refactoring" />
     <MESSAGE value="result_getter" />
     <MESSAGE value="get_pool" />
-    <MESSAGE value="progress" />
     <MESSAGE value="progress, working" />
     <MESSAGE value="format" />
     <MESSAGE value="use .env&#10;ready for caching" />
     <MESSAGE value="Formatting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Formatting" />
+    <MESSAGE value="progress" />
+    <option name="LAST_COMMIT_MESSAGE" value="progress" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/backend/.gitignore">
@@ -692,8 +659,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/actions/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="1" lean-forward="true" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+        <state relative-caret-position="238">
+          <caret line="14" column="39" lean-forward="true" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
           <folding>
             <element signature="e#0#29#0" expanded="true" />
           </folding>
