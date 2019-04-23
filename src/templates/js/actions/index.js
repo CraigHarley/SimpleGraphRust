@@ -6,15 +6,13 @@ export const GET_PLAYERS = 'GET_PLAYERS';
 export const GET_RESULTS = 'GET_RESULTS';
 
 export const getPlayers = async () => {
-
-    console.log(players);
-    store.commit(UPDATE_PLAYERS_REDUCER, players);
+    const response = await fetch('/players');
+    store.commit(UPDATE_PLAYERS_REDUCER, response.json());
 };
 
-export const getResults = async () => {
-    console.log(players);
-    store.commit(UPDATE_RESULTS_REDUCER, players);
-}
+export const getResults = async (payload) => {
+    store.commit(UPDATE_RESULTS_REDUCER, payload);
+};
 
 export default {
     [GET_PLAYERS]: getPlayers,

@@ -1,9 +1,9 @@
 import React, {PureComponent} from 'react';
+import { Provider } from 'react-redux';
 
-import Head from 'next/head';
-
-import form from "../partials/form";
 import results from "../partials/results";
+import store from "../store";
+import Form from "../partials/Form";
 
 const styles = {
     container: {
@@ -18,19 +18,22 @@ const styles = {
 
 export default class extends PureComponent {
     state = {
-        view: this.props.view
+        view: 'form'
     };
 
     render() {
         return (
-            <div style={{padding: '1rem'}}>
-                <h1 style={{textAlign: 'center'}}><i className="fas fa-project-diagram"/> Six Degrees Of Peter Crouch
-                </h1>
-                <div style={styles.container}>
-                    {this.state.view === 'form' && form}
-                    {this.state.view === 'results' && results}
+            <Provider store={store}>
+                <div style={{padding: '1rem'}}>
+                    <h1 style={{textAlign: 'center'}}>
+                        <i className="fas fa-project-diagram"/> Six Degrees Of Peter Crouch
+                    </h1>
+                    <div style={styles.container}>
+                        {this.state.view === 'form' && <Form/>}
+                        {this.state.view === 'results' && results}
+                    </div>
                 </div>
-            </div>
+            </Provider>
         );
     }
 }

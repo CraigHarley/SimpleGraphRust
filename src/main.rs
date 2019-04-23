@@ -9,6 +9,7 @@ extern crate serde;
 
 use rocket::State;
 use rocket_contrib::json::Json;
+use serde::Serialize;
 
 mod graph;
 mod pool;
@@ -24,6 +25,8 @@ use rocket::fairing::AdHoc;
 use std::path::PathBuf;
 use rocket::response::NamedFile;
 use std::path::Path;
+use crate::pool::get_pool;
+use mysql::QueryResult;
 
 struct AssetsDir(String);
 
@@ -42,6 +45,7 @@ fn main() {
             Ok(rocket.manage(AssetsDir(assets_dir)))
         }))
         .mount("/", routes![index])
+        .mount("/players", routes![players])
         .mount("/assets", routes![assets])
         .mount("/sixdegrees", routes![sixdegrees])
         .launch();
@@ -53,6 +57,32 @@ fn index() -> Template {
         // todo
     };
     Template::render("index", &context)
+}
+
+#[derive(Serialize)]
+struct Player {
+    id: u32,
+    name: String,
+    dob: String,
+}
+
+#[get("/")]
+fn players() -> Json<Vec<Player>> {
+    Json(
+        get_pool().prep_exec("SELECT id, name, dob FROM player", ())
+            .map(|result: QueryResult| {
+                result
+                    .map(|x| x.unwrap())
+                    .map(|row| {
+                        let (id, name, dob) = mysql::from_row(row);
+                        Player {
+                            id,
+                            name,
+                            dob,
+                        }
+                    }).collect()
+            }).unwrap()
+    )
 }
 
 #[get("/<first>/<second>")]

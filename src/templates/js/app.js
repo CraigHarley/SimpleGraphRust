@@ -1,6 +1,7 @@
 'use strict';
 import * as ReactDOM from "react-dom";
 import * as React from "react";
+import "@babel/polyfill";
 
 import Index from "./pages/index";
 
