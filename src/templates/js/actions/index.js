@@ -1,17 +1,23 @@
-import store from '../store';
+import {GET_PLAYERS, GET_RESULTS} from "../reducers";
 
-import {UPDATE_PLAYERS_REDUCER, UPDATE_RESULTS_REDUCER} from "../reducers";
+const GET_PLAYERS_ACTION = (payload) => ({
+    type: GET_PLAYERS,
+    payload
+});
 
-export const GET_PLAYERS = 'GET_PLAYERS';
-export const GET_RESULTS = 'GET_RESULTS';
-
-export const getPlayers = async () => {
+export const getPlayers = async (dispatch) => {
     const response = await fetch('/players');
-    store.commit(UPDATE_PLAYERS_REDUCER, response.json());
+    dispatch(GET_PLAYERS_ACTION(await response.json()));
 };
 
-export const getResults = async (payload) => {
-    store.commit(UPDATE_RESULTS_REDUCER, payload);
+const GET_RESULTS_ACTION = (payload) => ({
+    type: GET_RESULTS,
+    payload
+});
+
+export const getResults = async (dispatch) => {
+    // todo request
+    dispatch(GET_RESULTS_ACTION({}));
 };
 
 export default {

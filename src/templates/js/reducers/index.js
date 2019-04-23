@@ -1,17 +1,17 @@
-export const UPDATE_PLAYERS_REDUCER = 'UPDATE_PLAYERS_REDUCER';
-export const UPDATE_RESULTS_REDUCER = 'UPDATE_RESULTS_REDUCER';
+export const GET_PLAYERS = 'GET_PLAYERS';
+export const GET_RESULTS = 'GET_RESULTS';
 
-export const updatePlayersReducer = (state, players) => ({
+export const getPlayersReducer = (state, players) => ({
     ...state,
     players
 });
 
-export const updateResultsReducer = (state, results) => ({
+export const getResultsReducer = (state, results) => ({
     ...state,
     results
 });
 
 export default {
-    [UPDATE_PLAYERS_REDUCER]: updatePlayersReducer,
-    [UPDATE_RESULTS_REDUCER]: updateResultsReducer
+    [GET_PLAYERS]: getPlayersReducer,
+    [GET_RESULTS]: getResultsReducer
 };
