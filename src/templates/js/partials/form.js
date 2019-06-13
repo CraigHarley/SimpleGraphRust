@@ -1,8 +1,5 @@
 import React, {PureComponent} from "react";
-
-import store from "../store";
-import {getPlayers} from "../actions";
-import {connect} from "react-redux";
+import VirtualList from 'react-tiny-virtual-list';
 
 const styles = {
     selectWrapper: {
@@ -17,60 +14,44 @@ const styles = {
     }
 };
 
+const data = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-class Form extends PureComponent {
+export default class extends PureComponent {
     componentDidMount() {
         this.props.getPlayers();
     }
 
     render() {
-        // const options = store.getState().players
-        //     .sort((a, b) => {
-        //         if (a.name < b.name) {
-        //             return -1;
-        //         }
-        //         if (a.name > b.name) {
-        //             return 1;
-        //         }
-        //         return 0;
-        //     })
-        //     .map((player) =>
-        //         <option
-        //             key={player.id}
-        //             value={player.id}
-        //         >
-        //             {player.name} ({player.dob})
-        //         </option>
-        //     );
-
         return (
             <div>
                 <div style={styles.selectWrapper}>
                     <i className="fas fa-user" style={{padding: '1rem'}}/>
-                    {/*<select*/}
-                        {/*name="First"*/}
-                        {/*id="first"*/}
-                        {/*required*/}
-                        {/*defaultValue={542}*/}
-                        {/*style={{width: '20rem'}}*/}
-                    {/*>*/}
-                        {/*<option value="" disabled>Select first player</option>*/}
-                        {/*{options}*/}
-                    {/*</select>*/}
+                    <VirtualList
+                        width='100%'
+                        height={600}
+                        itemCount={data.length}
+                        itemSize={50} // Also supports variable heights (array or function getter)
+                        renderItem={({index, style}) =>
+                            <div key={index} style={style}> // The style property contains the item's absolute position
+                                Letter: {data[index]}, Row: #{index}
+                            </div>
+                        }
+                    />
                 </div>
 
                 <div style={styles.selectWrapper}>
                     <i className="fas fa-user" style={{padding: '1rem'}}/>
-                    {/*<select*/}
-                        {/*name="Second"*/}
-                        {/*id="second"*/}
-                        {/*required*/}
-                        {/*defaultValue={9457}*/}
-                        {/*style={{width: '20rem'}}*/}
-                    {/*>*/}
-                        {/*<option value="" disabled>Select second player</option>*/}
-                        {/*{options}*/}
-                    {/*</select>*/}
+                    <VirtualList
+                        width='100%'
+                        height={600}
+                        itemCount={data.length}
+                        itemSize={50} // Also supports variable heights (array or function getter)
+                        renderItem={({index, style}) =>
+                            <div key={index} style={style}> // The style property contains the item's absolute position
+                                Letter: {data[index]}, Row: #{index}
+                            </div>
+                        }
+                    />
                 </div>
 
                 <button style={styles.button}>
@@ -80,17 +61,3 @@ class Form extends PureComponent {
         );
     }
 }
-
-function mapStateToProps({players}) {
-    return {
-        players,
-    };
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        getPlayers: () => getPlayers(dispatch),
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Form);
